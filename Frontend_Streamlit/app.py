@@ -580,12 +580,45 @@ def document_viewer():
     col_sum, col_qa, col_report = st.columns(3)
 
     with col_sum:
-        if st.button("📝 Generate Summary", use_container_width=True):
+        if st.button("📝 Generate Combined Summary", use_container_width=True):
             if not st.session_state.selected_documents:
                 st.warning("Please select at least one document.")
             else:
-                st.session_state.current_document = None
-                st.session_state.document_content_cache = {}
+                progress_text = "Generating comprehensive summary..."
+                with st.spinner(progress_text):
+                    try:
+                        headers = {"Authorization": f"Bearer {st.session_state.token}"}
+                        response = requests.post(
+                            f"{API_URL}/analyze-documents",
+                            headers=headers,
+                            json={
+                                "pdf_links": [doc['pdf_link'] for doc in st.session_state.selected_documents],
+                                "analysis_type": "summary"
+                            },
+                            timeout=60  # Increased timeout for larger documents
+                        )
+                        
+                        if response.status_code == 200:
+                            result = response.json()
+                            
+                            # Create an expander for the summary
+                            with st.expander("📋 Combined Summary", expanded=True):
+                                st.write(result["answer"])
+                                
+                                # Display sources if available
+                                if result.get("source_documents"):
+                                    st.markdown("#### Sources Used:")
+                                    for source in result["source_documents"]:
+                                        st.markdown(f"""
+                                        - **Document**: {source['title']}
+                                        - **Relevance Score**: {source['relevance_score']:.2f}
+                                        """)
+                        else:
+                            st.error(f"Error generating summary: {response.json().get('detail', 'Unknown error')}")
+                    except requests.exceptions.Timeout:
+                        st.error("Request timed out. The documents might be too large. Try selecting fewer documents.")
+                    except Exception as e:
+                        st.error(f"Error: {str(e)}")
 
     with col_qa:
         if st.button("❓ Q&A Mode", use_container_width=True):

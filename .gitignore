@@ -163,3 +163,7 @@ cython_debug/
 *.json
 
 *.DS_Store
+
+*milvus_llamaindex.db.lock
+*milvus_llamaindex.db
+*data_images
