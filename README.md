@@ -236,6 +236,7 @@ Comprehensive interface for document interaction:
 - NVIDIA API Key (optional)
 
 ## Set Up Application Locally
+ + Push Fastapi:
  ```
  docker push Username/ImageNameForFastapi:latest
  ```
