@@ -85,35 +85,45 @@ def initial_home():
     st.set_page_config(page_title="Multi-modal RAG", page_icon="📄", layout="wide")
     load_css()
 
-    # Header section with login/logout button
-    col1, col2 = st.columns([8, 1])
-
-    def go_to_signin():
-        st.session_state.page = "signin"
-
-    def logout():
-        st.session_state.logged_in = False
-        st.session_state.token = None
-        st.session_state.username = None
-        st.session_state.page = "home"
-        st.session_state.chat_history = []
-        st.session_state.documents = []  # Clear loaded documents
-        st.session_state.selected_documents = []  # Clear selections
-        st.session_state.current_page = 'document_select'  # Reset to initial view
-        st.session_state.current_document = None
-        st.session_state.processing_question = False
-
-    with col2:
-        st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
-        if st.session_state.logged_in:
-            st.button("🚪 Logout", key="logout_button", on_click=logout)
-        else:
-            st.button("🔒 Login", key="login_button", on_click=go_to_signin)
+    # Create a header container
+    header_container = st.container()
+    with header_container:
+        # Create columns for title and login button with better ratio
+        col1, col2, col3 = st.columns([1, 6, 1])
+        
+        with col2:
+            st.markdown(
+                '<div style="text-align: center; font-size: 3.5rem; font-weight: bold;">Multi-modal RAG</div>',
+                unsafe_allow_html=True
+            )
+        
+        with col3:
+            # Add vertical margin to align with title
+            st.markdown("<div style='margin-top: 15px;'>", unsafe_allow_html=True)
+            if st.session_state.logged_in:
+                if st.button("🚪 Logout", key="logout_button", use_container_width=True):
+                    # Handle logout
+                    st.session_state.logged_in = False
+                    st.session_state.token = None
+                    st.session_state.username = None
+                    st.session_state.page = "home"
+                    st.session_state.chat_history = []
+                    st.session_state.documents = []
+                    st.session_state.selected_documents = []
+                    st.session_state.current_page = 'document_select'
+                    st.session_state.current_document = None
+                    st.session_state.processing_question = False
+                    st.rerun()
+            else:
+                if st.button("🔒 Login", key="login_button", use_container_width=True):
+                    st.session_state.page = "signin"
+                    st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
 
     # Main content
     if st.session_state.logged_in:
         st.markdown(
-            f'<div style="text-align: center; font-size: 2.5rem;">Welcome, {st.session_state.username}!</div>',
+            f'<div style="text-align: center; font-size: 2.5rem; margin-top: 2rem;">Welcome, {st.session_state.username}!</div>',
             unsafe_allow_html=True)
         st.markdown(
             '<div style="text-align: center; font-size: 2.5rem;">You are now logged in to Multi-modal RAG.</div>',
@@ -121,11 +131,9 @@ def initial_home():
     else:
         # Landing page content
         st.markdown(
-            '<div style="text-align: center; font-size: 3.5rem; font-weight: bold;">Multi-modal RAG</div>',
-            unsafe_allow_html=True)
-        st.markdown(
-            '<div style="text-align: center; font-size: 2.5rem;">Your AI-powered assistant for Multi-modal Retrieval Augmented Generation</div>',
-            unsafe_allow_html=True)
+            '<div style="text-align: center; font-size: 2.5rem; margin-top: 2rem;">Your AI-powered assistant for Multi-modal Retrieval Augmented Generation</div>',
+            unsafe_allow_html=True
+        )
         
         st.write("---")
         
@@ -136,10 +144,9 @@ def initial_home():
         st.markdown('''
             <div style="text-align: center;">
             <ul class="features">
-                <li>🔍 <strong>Retrieve</strong> information from various modalities like text, images, and audio.</li>
+                <li>🔍 <strong>Retrieve</strong> information from various modalities like text, images.</li>
                 <li>🤖 <strong>Generate</strong> responses augmented with retrieved data.</li>
                 <li>📈 <strong>Improve</strong> AI performance with context-aware retrieval.</li>
-                <li>⚙️ <strong>Customize</strong> settings to optimize your workflow.</li>
             </ul>
             </div>
         ''', unsafe_allow_html=True)
@@ -156,7 +163,7 @@ def initial_home():
         
         # Footer
         st.markdown(
-            '<div class="footer">© 2024 Multi-modal RAG. All rights reserved.</div>',
+            '<div class="footer" style="text-align: center; margin-top: 2rem;">© 2024 Multi-modal RAG. All rights reserved.</div>',
             unsafe_allow_html=True)
         
 def add_message(role: str, content: str, sources: List = None):
@@ -299,8 +306,28 @@ def login():
     st.button("📝 Sign Up", on_click=go_to_signup)
 
 def chat_interface():
-    """Updated chat interface with immediate responses"""
-    st.title("💬 Multi-Document Q&A")
+    """Updated chat interface with immediate responses and visible logout"""
+    # Header with title and logout
+    header_col1, header_col2 = st.columns([10, 2])
+    
+    with header_col1:
+        st.title("💬 Multi-Document Q&A")
+    
+    with header_col2:
+        st.markdown("<div style='margin-top: 20px;'>", unsafe_allow_html=True)
+        if st.button("🚪 Logout", use_container_width=True):
+            st.session_state.logged_in = False
+            st.session_state.token = None
+            st.session_state.username = None
+            st.session_state.page = "home"
+            st.session_state.chat_history = []
+            st.session_state.documents = []
+            st.session_state.selected_documents = []
+            st.session_state.current_page = 'document_select'
+            st.session_state.current_document = None
+            st.session_state.processing_question = False
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
     
     # Show which documents are being analyzed
     st.write("📚 Analyzing the following documents:")
@@ -326,14 +353,11 @@ def chat_interface():
 
     # Question input
     if question := st.chat_input("Ask a question about the documents..."):
-        # Add user message to chat history and display immediately
         add_message("user", question)
         
-        # Display user's message immediately
         with st.chat_message("user"):
             st.markdown(question)
 
-        # Process the question and display assistant's response
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             with st.spinner("Analyzing documents..."):
@@ -351,17 +375,13 @@ def chat_interface():
                     
                     if response.status_code == 200:
                         answer_data = response.json()
-                        # Display the response in real-time
                         message_placeholder.markdown(answer_data["answer"])
-                        
-                        # Add response to chat history
                         add_message(
                             "assistant",
                             answer_data["answer"],
                             answer_data.get("source_documents", [])
                         )
                         
-                        # Display sources if available
                         if answer_data.get("source_documents"):
                             st.markdown("#### Sources Used:")
                             for source in answer_data["source_documents"]:
@@ -379,9 +399,9 @@ def chat_interface():
                     message_placeholder.error(error_message)
                     add_message("assistant", error_message)
 
-    # Navigation
+    # Navigation at the bottom
     st.markdown("---")
-    if st.button("⬅️ Back to Documents"):
+    if st.button("⬅️ Back to Documents", use_container_width=True):
         st.session_state.current_page = 'document_view'
         st.rerun()
 
@@ -407,8 +427,8 @@ def document_selection_view():
     header_container = st.container()
     
     with header_container:
-        # Create columns for title and next button with better spacing
-        title_col, next_col = st.columns([8, 2])
+        # Create columns for title, next button, and logout button
+        title_col, next_col, logout_col = st.columns([7, 2, 1])
         with title_col:
             st.title("📚 Document Selection")
         with next_col:
@@ -419,6 +439,21 @@ def document_selection_view():
                 # Clear current document and cache when moving to next page
                 st.session_state.current_document = None
                 st.session_state.document_content_cache = {}
+                st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
+        with logout_col:
+            st.markdown("<div style='margin-top: 25px;'>", unsafe_allow_html=True)
+            if st.button("🚪", key="logout_btn", help="Logout", use_container_width=True):
+                st.session_state.logged_in = False
+                st.session_state.token = None
+                st.session_state.username = None
+                st.session_state.page = "home"
+                st.session_state.chat_history = []
+                st.session_state.documents = []
+                st.session_state.selected_documents = []
+                st.session_state.current_page = 'document_select'
+                st.session_state.current_document = None
+                st.session_state.processing_question = False
                 st.rerun()
             st.markdown("</div>", unsafe_allow_html=True)
 
@@ -455,7 +490,27 @@ def document_selection_view():
                     st.session_state.selected_documents.remove(doc)
 
 def document_viewer():
-    st.title("📄 Document Analysis")
+    # First create the header with navigation
+    header_col1, header_col2 = st.columns([10, 2])
+    
+    with header_col1:
+        st.title("📄 Document Analysis")
+    
+    with header_col2:
+        st.markdown("<div style='margin-top: 20px;'>", unsafe_allow_html=True)
+        if st.button("🚪 Logout", use_container_width=True):
+            st.session_state.logged_in = False
+            st.session_state.token = None
+            st.session_state.username = None
+            st.session_state.page = "home"
+            st.session_state.chat_history = []
+            st.session_state.documents = []
+            st.session_state.selected_documents = []
+            st.session_state.current_page = 'document_select'
+            st.session_state.current_document = None
+            st.session_state.processing_question = False
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
     
     # Create two columns for layout
     col1, col2 = st.columns([2, 3])
@@ -519,27 +574,24 @@ def document_viewer():
 
     # Add unified analysis section below the document viewer
     st.markdown("---")
-    st.subheader("🔍 Combined Document Analysis")
+    st.subheader("🔍 Document Analysis")
 
     # Analysis options in three columns
     col_sum, col_qa, col_report = st.columns(3)
 
     with col_sum:
-        if st.button("📝 Generate Combined Summary", use_container_width=True):
+        if st.button("📝 Generate Summary", use_container_width=True):
             if not st.session_state.selected_documents:
                 st.warning("Please select at least one document.")
             else:
-                # Clear current document and cache when navigating
                 st.session_state.current_document = None
                 st.session_state.document_content_cache = {}
-                # Rest of the summary generation code...
 
     with col_qa:
-        if st.button("❓ Combined Q&A Mode", use_container_width=True):
+        if st.button("❓ Q&A Mode", use_container_width=True):
             if not st.session_state.selected_documents:
                 st.warning("Please select at least one document.")
             else:
-                # Clear current document, cache, and chat history
                 st.session_state.current_document = None
                 st.session_state.document_content_cache = {}
                 st.session_state.chat_history = []
@@ -552,16 +604,14 @@ def document_viewer():
             if not st.session_state.selected_documents:
                 st.warning("Please select at least one document.")
             else:
-                # Clear current document and cache when navigating
                 st.session_state.current_document = None
                 st.session_state.document_content_cache = {}
                 st.session_state.current_page = 'report_generation'
                 st.rerun()
 
-    # Navigation
+    # Navigation at the bottom
     st.markdown("---")
-    if st.button("⬅️ Back to Selection"):
-        # Clear current document, cache, and reset page
+    if st.button("⬅️ Back to Selection", use_container_width=True):
         st.session_state.current_document = None
         st.session_state.document_content_cache = {}
         st.session_state.current_page = 'document_select'
@@ -607,7 +657,27 @@ def display_report(report_data):
             continue
 
 def report_generation_interface():
-    st.title("📊 Generate Multimodal Report")
+    # Header with title and logout
+    header_col1, header_col2 = st.columns([10, 2])
+    
+    with header_col1:
+        st.title("📊 Generate Multimodal Report")
+    
+    with header_col2:
+        st.markdown("<div style='margin-top: 20px;'>", unsafe_allow_html=True)
+        if st.button("🚪 Logout", use_container_width=True):
+            st.session_state.logged_in = False
+            st.session_state.token = None
+            st.session_state.username = None
+            st.session_state.page = "home"
+            st.session_state.chat_history = []
+            st.session_state.documents = []
+            st.session_state.selected_documents = []
+            st.session_state.current_page = 'document_select'
+            st.session_state.current_document = None
+            st.session_state.processing_question = False
+            st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
     
     # Show selected documents
     st.write("📚 Generating report for the following documents:")
