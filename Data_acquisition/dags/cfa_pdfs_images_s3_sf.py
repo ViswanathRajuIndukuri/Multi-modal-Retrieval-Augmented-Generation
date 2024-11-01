@@ -249,7 +249,10 @@ def scrape_all_pages_for_pdfs():
 
 # Wrap the main function in an entry point
 if __name__ == "__main__":
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    # for local run
+    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    # for docker container run
+    driver = webdriver.Remote(command_executor='http://selenium-chrome:4444/wd/hub', options=chrome_options)
     try:
         scrape_all_pages_for_pdfs()
     finally:
