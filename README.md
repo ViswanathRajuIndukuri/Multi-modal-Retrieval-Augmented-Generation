@@ -236,7 +236,91 @@ Comprehensive interface for document interaction:
 - NVIDIA API Key (optional)
 
 ## Set Up Application Locally
- + Push Fastapi:
+1. Clone the repository to get all the source code on your machine 
+```
+git clone yourRepo
+cd yourRepo
+```
+2. Set Up Environment Variables at required locations by creating .env files with variable values.
+```
+#env at Airflow
+
+GOOGLE_APPLICATION_CREDENTIALS=/opt/airflow/"your GCP Service Account json"
+AIRFLOW_UID=502
+
+```
+
+3. Build and Run Airflow by running below commands
+```
+cd Airflow
+docker build -t my_airflow_image:latest .
+docker-compose up -d
+```
+Access the Airflow web UI at http://localhost:8080
+
+4. Trigger the Airflow DAG in the Airflow UI to start the data pipeline.
+5. Navigate back to root dir to setup relevant env variables for streamlit and FastAPI applications
+```
+cd ..
+```
+
+```
+#env for root dir
+
+DB_HOST="your DB Host"
+DB_PORT=5432 # default
+DB_NAME=""your DB name
+DB_USER="your DB user"
+DB_PASSWORD="your DB pwd"
+
+API_URL=http://fastapi:8000
+
+SECRET_KEY="your secret key"
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+GOOGLE_APPLICATION_CREDENTIALS="your GCP Service Account json"
+OPENAI_API_KEY="your openai API Key"
+NVIDIA_API_KEY="your key"
+
+SNOWFLAKE_ACCOUNT="your details"
+SNOWFLAKE_USER="your details"
+SNOWFLAKE_PASSWORD="your details"
+SNOWFLAKE_DATABASE="your details"
+SNOWFLAKE_SCHEMA="your details"
+SNOWFLAKE_WAREHOUSE="your details"
+SNOWFLAKE_TABLE="your details"
+
+AWS_ACCESS_KEY_ID="your details"
+AWS_SECRET_ACCESS_KEY="your details"
+AWS_REGION=us-east-1
+BUCKET_NAME="your details"
+PDF_FOLDER="your details"
+IMAGE_FOLDER="your details"
+
+MILVUS_HOST=localhost
+MILVUS_PORT=19530
+
+LLAMA_PARSE_API_KEY="your key"
+```
+
+6. Local docker compose build and up, push the images to hub
+ + build fastapi and streamlit docker images through docker compose from root dir
+ ```
+ docker compose build --no-cache
+ ```
+ + Runs the images thorugh docker compose
+ ```
+ docker compose up
+ ```
+ + Tag the FastAPI image:
+ ```
+ docker tag ImageNameForFastapi Username/ImageNameForFastapi:latest
+ ```
+ + Tag the Streamlit image:
+ ```
+ docker tag ImageNameForStreamlit Username/ImageNameForStreamlit:latest
+ ```
+ + Push FastAPI:
  ```
  docker push Username/ImageNameForFastapi:latest
  ```
@@ -244,6 +328,7 @@ Comprehensive interface for document interaction:
  ```
  docker push Username/ImageNameForStreamlit:latest
  ```
+ 
 ## Deploy in GCP VM
 
 1. GCP docker setup, create folder, create docker compose file, scp the .env and json file, pull the images, run docker compose.
