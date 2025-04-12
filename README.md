@@ -15,11 +15,6 @@ This project implements a comprehensive Multi-modal Retrieval Augmented Generati
 
 **Documentation**: [[Codelab Documentation Link]](https://codelabs-preview.appspot.com/?file_id=16rva6cQAW035xxCOuIZzpcxS_c5HmKfPp2t2TbLWZ6A#6)
 
-**Demo Video Link**: [[Video Link]](https://drive.google.com/drive/folders/19WdASkqfI6Gu0sSCoISPBfGuDf1uzKm7?usp=sharing)
-
-**Application URL**: [http://viswanath.me:8501/](http://35.223.189.207:8501/)
-
-**Backend Service Link**: [http://viswanath.me:8000/docs](http://35.223.189.207:8000/docs)
 
 **Diagrams link**: 
 
