@@ -10,57 +10,6 @@
 [![Milvus](https://img.shields.io/badge/Milvus-00A4E4?style=for-the-badge&logo=milvus&logoColor=white)](https://milvus.io/)
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com)
 
-WE ATTEST THAT WE HAVEN'T USED ANY OTHER STUDENTS' WORK IN OUR ASSIGNMENT AND ABIDE BY THE POLICIES LISTED IN THE STUDENT HANDBOOK
-Contribution:
-- a. Viswanath Raju Indukuri: 33%
-- b. Snehal Shivaji Molavade: 33%
-- c. Sai Vivekanand Reddy Vangala: 33%
-
-## Individual Contributions
-
-### Viswanath Raju Indukuri
-- **Frontend Development**:
-  - Created responsive Streamlit interface
-  - Implemented document grid view and viewer
-  - Developed user authentication UI
-  - Designed interactive analysis tools
-
-- **FastAPI Backend**:
-  - Implemented secure endpoints
-  - Developed Q&A functionality
-  - Integrated JWT authentication
-
-- **Report Generation**:
-  - Implemented image integration
-  - Designed report response
-
-### Snehal Shivaji Molavade
-- **Data Pipeline**:
-  - Designed Airflow DAG architecture
-  - Implemented web scraping
-
-- **Storage Integration**:
-  - Set up AWS S3 configuration
-  - Implemented Snowflake integration
-
-- **Multi-modal Processing**:
-  - Implemented text extraction
-  - Developed image processing
-  - Created metadata management
-
-### Sai Vivekanand Reddy Vangala
-- **RAG Implementation**:
-  - Set up llm model integration
-  - Implemented vector db
-
-- **Docker Configuration**:
-  - Created containerization setup
-  - Managed service orchestration
-
-- **Documentation**:
-  - Designed architecture diagrams
-  - Managed project documentation
-
 ## Description
 This project implements a comprehensive Multi-modal Retrieval Augmented Generation (RAG) system for CFA Institute Research Foundation Publications. The system automates the extraction of text and images from PDF files, stores them securely, and provides an interactive interface for users to explore and analyze the documents through various features like document summaries, Q&A capabilities, and report generation. By leveraging advanced AI technologies and cloud infrastructure, we create a seamless experience for accessing and analyzing financial research publications.
 
